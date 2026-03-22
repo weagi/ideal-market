@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵感集市 - HTML原型</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .prototype-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px 32px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .section-content {
+            padding: 32px;
+        }
+        
+        /* 首页/灵感库样式 */
+        .idea-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        .idea-card {
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .idea-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            border-color: #667eea;
+        }
+        
+        .idea-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #495057;
+        }
+        
+        .idea-preview {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .idea-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #adb5bd;
+        }
+        
+        .add-idea-btn {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+        }
+        
+        /* 灵感捕捉页面样式 */
+        .capture-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .capture-title {
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #495057;
+        }
+        
+        .capture-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .input-label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 16px;
+        }
+        
+        .voice-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            border: 2px dashed #667eea;
+            border-radius: 16px;
+            background: rgba(102, 126, 234, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .voice-input:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #764ba2;
+        }
+        
+        .voice-icon {
+            font-size: 48px;
+            color: #667eea;
+        }
+        
+        .image-upload {
+            border: 2px dashed #6c757d;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .image-upload:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 32px;
+            color: #6c757d;
+            margin-bottom: 12px;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 12px;
+            font-size: 16px;
+            resize: vertical;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .capture-actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 32px;
+        }
+        
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        /* AI转化预览页面样式 */
+        .ai-preview-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .preview-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .preview-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .preview-subtitle {
+            color: #6c757d;
+            font-size: 16px;
+        }
+        
+        .ai-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+        
+        .prd-section {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .prd-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .prd-section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .prd-section-content {
+            color: #6c757d;
+            line-height: 1.8;
+        }
+        
+        .user-stories {
+            list-style: none;
+        }
+        
+        .user-story {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .features-list {
+            list-style: none;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .feature-icon {
+            color: #667eea;
+            font-size: 18px;
+            margin-top: 2px;
+        }
+        
+        /* 交易市场页面样式 */
+        .market-filters {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            min-width: 120px;
+        }
+        
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .market-card {
+            border: 1px solid #e9ecef;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .market-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+        
+        .market-card-image {
+            height: 160px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+        
+        .market-card-content {
+            padding: 20px;
+        }
+        
+        .market-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+        
+        .market-card-desc {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .market-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+        }
+        
+        .price-tag {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .hotness {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+        
+        .hot-icon {
+            font-size: 16px;
+        }
+        
+        /* Idea详情页面样式 */
+        .detail-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+            gap: 24px;
+        }
+        
+        .detail-title-section {
+            flex: 1;
+        }
+        
+        .detail-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .detail-meta {
+            display: flex;
+            gap: 24px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .detail-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .action-btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-sell {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+        }
+        
+        .btn-develop {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+        }
+        
+        .detail-prd {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        
+        .detail-section {
+            margin-bottom: 24px;
+        }
+        
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+        
+        .detail-content {
+            color: #6c757d;
+            line-height: 1.8;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .section-header {
+                padding: 20px 24px;
+                font-size: 20px;
+            }
+            
+            .section-content {
+                padding: 24px;
+            }
+            
+            .idea-list,
+            .market-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .detail-header {
+                flex-direction: column;
+            }
+            
+            .add-idea-btn {
+                bottom: 16px;
+                right: 16px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 首页/灵感库 -->
+        <div class="prototype-section">
+            <div class="section-header">
+                1. 首页/灵感库 - 显示用户的所有想法列表
+            </div>
+            <div class="section-content">
+                <div class="idea-list">
+                    <div class="idea-card">
+                        <div class="idea-title">智能健康手环</div>
+                        <div class="idea-preview">一款集成了AI健康监测的智能手环，能够实时分析用户的生理数据并提供个性化健康建议...</div>
+                        <div class="idea-meta">
+                            <span>2026-03-20</span>
+                            <span>未转化</span>
+                        </div>
+                    </div>
+                    <div class="idea-card">
+                        <div class="idea-title">AR虚拟试衣间</div>
+                        <div class="idea-preview">基于增强现实技术的在线试衣解决方案，用户可以在家中通过手机摄像头试穿不同款式的服装...</div>
+                        <div class="idea-meta">
+                            <span>2026-03-18</span>
+                            <span>已转化</span>
+                        </div>
+                    </div>
+                    <div class="idea-card">
+                        <div class="idea-title">AI写作助手</div>
+                        <div class="idea-preview">专为内容创作者设计的AI写作工具，能够根据关键词自动生成高质量的文章草稿...</div>
+                        <div class="idea-meta">
+                            <span>2026-03-15</span>
+                            <span>已上架</span>
+                        </div>
+                    </div>
+                    <div class="idea-card">
+                        <div class="idea-title">智能家居控制系统</div>
+                        <div class="idea-preview">统一控制所有智能家居设备的中央控制系统，支持语音控制和场景自动化...</div>
+                        <div class="idea-meta">
+                            <span>2026-03-12</span>
+                            <span>未转化</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 灵感捕捉页面 -->
+        <div class="prototype-section">
+            <div class="section-header">
+                2. 灵感捕捉页面 - 极简记录界面
+            </div>
+            <div class="section-content">
+                <div class="capture-container">
+                    <div class="capture-title">记录你的灵感</div>
+                    <div class="capture-inputs">
+                        <div class="input-group">
+                            <label class="input-label">语音输入</label>
+                            <div class="voice-input">
+                                <div class="voice-icon">🎤</div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">图片上传</label>
+                            <div class="image-upload">
+                                <div class="upload-icon">📷</div>
+                                <div>点击上传灵感相关的图片</div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">文本补充</label>
+                            <textarea placeholder="在这里补充你的想法细节..."></textarea>
+                        </div>
+                    </div>
+                    <div class="capture-actions">
+                        <button class="btn btn-outline">取消</button>
+                        <button class="btn btn-primary">保存灵感</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI转化预览页面 -->
+        <div class="prototype-section">
+            <div class="section-header">
+                3. AI转化预览页面 - AI生成的产品需求文档
+            </div>
+            <div class="section-content">
+                <div class="ai-preview-container">
+                    <div class="preview-header">
+                        <div class="preview-title">智能健康手环产品需求文档 <span class="ai-badge">AI生成</span></div>
+                        <div class="preview-subtitle">基于您的灵感自动生成的完整PRD文档</div>
+                    </div>
+                    
+                    <div class="prd-section">
+                        <div class="prd-section-title">📋 项目背景</div>
+                        <div class="prd-section-content">
+                            随着人们对健康的关注度日益提高，智能穿戴设备市场呈现快速增长趋势。然而，现有产品在个性化健康建议和数据深度分析方面仍存在不足。本项目旨在开发一款集成了先进AI算法的智能健康手环，能够为用户提供更加精准和个性化的健康管理服务。
+                        </div>
+                    </div>
+                    
+                    <div class="prd-section">
+                        <div class="prd-section-title">👥 用户故事</div>
+                        <ul class="user-stories">
+                            <li class="user-story">作为一名健身爱好者，我希望能够实时监测我的心率变化，并在运动强度过高时收到提醒，以避免运动伤害。</li>
+                            <li class="user-story">作为一名上班族，我希望手环能够分析我的睡眠质量，并提供改善建议，帮助我获得更好的休息。</li>
+                            <li class="user-story">作为一名慢性病患者，我需要手环能够持续监测我的关键生理指标，并在异常时及时通知我和我的医生。</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="prd-section">
+                        <div class="prd-section-title">✨ 核心功能列表</div>
+                        <ul class="features-list">
+                            <li class="feature-item">
+                                <span class="feature-icon">⚡</span>
+                                <div><strong>实时生理监测</strong> - 持续监测心率、血氧、体温等关键指标</div>
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-icon">🧠</span>
+                                <div><strong>AI健康分析</strong> - 基于个人数据提供个性化健康建议</div>
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-icon">📱</span>
+                                <div><strong>智能提醒系统</strong> - 异常情况自动提醒用户和紧急联系人</div>
+                            </li>
+                            <li class="feature-item">
+                                <span class="feature-icon">🔋</span>
+                                <div><strong>超长续航</strong> - 单次充电可使用30天</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 交易市场页面 -->
+        <div class="prototype-section">
+            <div class="section-header">
+                4. 交易市场页面 - 可购买的Idea列表
+            </div>
+            <div class="section-content">
+                <div class="market-filters">
+                    <select class="filter-select">
+                        <option>全部分类</option>
+                        <option>健康科技</option>
+                        <option>人工智能</option>
+                        <option>电子商务</option>
+                        <option>教育科技</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>价格排序</option>
+                        <option>价格从低到高</option>
+                        <option>价格从高到低</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>热度排序</option>
+                        <option>最热门</option>
+                        <option>最新上架</option>
+                    </select>
+                </div>
+                
+                <div class="market-grid">
+                    <div class="market-card">
+                        <div class="market-card-image">💡</div>
+                        <div class="market-card-content">
+                            <div class="market-card-title">AR虚拟试衣间</div>
+                            <div class="market-card-desc">基于增强现实技术的在线试衣解决方案，提升电商购物体验...</div>
+                            <div class="market-card-meta">
+                                <div class="hotness">
+                                    <span class="hot-icon">🔥</span>
+                                    <span>98%热度</span>
+                                </div>
+                                <div class="price-tag">¥2,800</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="market-card">
+                        <div class="market-card-image">🤖</div>
+                        <div class="market-card-content">
+                            <div class="market-card-title">AI写作助手</div>
+                            <div class="market-card-desc">专为内容创作者设计的AI写作工具，提高内容生产效率...</div>
+                            <div class="market-card-meta">
+                                <div class="hotness">
+                                    <span class="hot-icon">🔥</span>
+                                    <span>85%热度</span>
+                                </div>
+                                <div class="price-tag">¥1,500</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="market-card">
+                        <div class="market-card-image">🏠</div>
+                        <div class="market-card-content">
+                            <div class="market-card-title">智能家居控制系统</div>
+                            <div class="market-card-desc">统一控制所有智能家居设备的中央控制系统...</div>
+                            <div class="market-card-meta">
+                                <div class="hotness">
+                                    <span class="hot-icon">🔥</span>
+                                    <span>72%热度</span>
+                                </div>
+                                <div class="price-tag">¥3,200</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Idea详情页面 -->
+        <div class="prototype-section">
+            <div class="section-header">
+                5. Idea详情页面 - 完整PRD文档和交易选项
+            </div>
+            <div class="section-content">
+                <div class="detail-container">
+                    <div class="detail-header">
+                        <div class="detail-title-section">
+                            <div class="detail-title">AR虚拟试衣间</div>
+                            <div class="detail-meta">
+                                <span>分类：电子商务</span>
+                                <span>创建时间：2026-03-18</span>
+                                <span>热度：98%</span>
+                            </div>
+                        </div>
+                        <div class="detail-actions">
+                            <button class="action-btn btn-sell">💰 授权售卖</button>
+                            <button class="action-btn btn-develop">🛠️ 定制开发</button>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-prd">
+                        <div class="detail-section">
+                            <div class="detail-section-title">📋 项目背景</div>
+                            <div class="detail-content">
+                                在线购物已成为主流消费方式，但服装类商品的退货率居高不下，主要原因是无法试穿导致的尺码和款式不合适问题。AR虚拟试衣间技术能够有效解决这一痛点，通过增强现实技术让用户在购买前就能看到服装上身效果，大幅提升购物体验和购买转化率。
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-section-title">👥 用户故事</div>
+                            <div class="detail-content">
+                                <p><strong>作为一位时尚爱好者</strong>，我希望能够在家就能试穿不同品牌和款式的服装，节省去实体店的时间。</p>
+                                <p><strong>作为一位忙碌的职场人士</strong>，我希望在碎片化时间内完成购物，同时确保购买的服装合身且符合我的风格。</p>
+                                <p><strong>作为一位电商平台运营者</strong>，我需要降低服装类商品的退货率，提升用户满意度和平台口碑。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-section-title">✨ 核心功能</div>
+                            <div class="detail-content">
+                                <ul>
+                                    <li><strong>3D人体建模</strong> - 通过手机摄像头快速构建用户3D模型</li>
+                                    <li><strong>真实材质渲染</strong> - 精确模拟不同面料的质感和垂坠效果</li>
+                                    <li><strong>多角度查看</strong> - 支持360度旋转查看试穿效果</li>
+                                    <li><strong>社交分享</strong> - 一键分享试穿效果到社交媒体</li>
+                                    <li><strong>智能推荐</strong> - 基于用户身材和风格偏好推荐合适商品</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-section-title">📊 商业价值</div>
+                            <div class="detail-content">
+                                <p>预计可将服装类商品的退货率从行业平均的35%降低至15%以下，同时提升购买转化率20-30%。对于大型电商平台，这将带来数亿元的年度成本节约和收入增长。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="add-idea-btn">+</div>
+</body>
+</html>

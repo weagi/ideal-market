@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵感集市 - 产品原型 v2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0ff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(106, 17, 203, 0.5), 
+                        0 0 50px rgba(37, 117, 252, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
+            z-index: 0;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .platform-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #e0e0ff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(106, 17, 203, 0.4);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            box-shadow: 0 0 20px rgba(106, 17, 203, 0.6),
+                        0 0 30px rgba(37, 117, 252, 0.4);
+            border: none;
+        }
+        
+        .platform-section {
+            display: none;
+            margin-bottom: 40px;
+        }
+        
+        .platform-section.active {
+            display: block;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(106, 17, 203, 0.5);
+        }
+        
+        .prototype-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .prototype-card {
+            background: rgba(30, 30, 60, 0.6);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3),
+                        0 0 20px rgba(106, 17, 203, 0.2);
+            overflow: hidden;
+            width: 320px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(106, 17, 203, 0.3);
+        }
+        
+        .prototype-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+                        0 0 30px rgba(106, 17, 203, 0.4);
+        }
+        
+        .card-header {
+            padding: 16px;
+            background: rgba(40, 40, 80, 0.7);
+            border-bottom: 1px solid rgba(106, 17, 203, 0.3);
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+        
+        .miniapp-header {
+            background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);
+            color: #0a0a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            font-weight: 600;
+            box-shadow: 0 0 15px rgba(0, 201, 255, 0.4);
+        }
+        
+        .miniapp-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            background: rgba(40, 40, 80, 0.5);
+            border-top: 1px solid rgba(106, 17, 203, 0.3);
+        }
+        
+        .nav-item {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #a0a0d0;
+        }
+        
+        .nav-item.active {
+            color: #00c9ff;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(0, 201, 255, 0.6);
+        }
+        
+        .input-group {
+            margin-bottom: 16px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #ffffff;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(106, 17, 203, 0.4);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: rgba(20, 20, 40, 0.5);
+            color: #e0e0ff;
+            backdrop-filter: blur(5px);
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #6a11cb;
+            box-shadow: 0 0 10px rgba(106, 17, 203, 0.5);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            box-shadow: 0 0 15px rgba(106, 17, 203, 0.4);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 0 25px rgba(106, 17, 203, 0.6),
+                        0 0 35px rgba(37, 117, 252, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);
+            color: #0a0a1a;
+            box-shadow: 0 0 15px rgba(0, 201, 255, 0.4);
+        }
+        
+        .btn-success:hover {
+            box-shadow: 0 0 25px rgba(0, 201, 255, 0.6),
+                        0 0 35px rgba(146, 254, 157, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #6a11cb;
+            color: #6a11cb;
+            box-shadow: 0 0 10px rgba(106, 17, 203, 0.3);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(106, 17, 203, 0.2);
+            box-shadow: 0 0 15px rgba(106, 17, 203, 0.5);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-processing {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            box-shadow: 0 0 8px rgba(255, 193, 7, 0.2);
+        }
+        
+        .status-completed {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            box-shadow: 0 0 8px rgba(40, 167, 69, 0.2);
+        }
+        
+        .status-error {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            box-shadow: 0 0 8px rgba(220, 53, 69, 0.2);
+        }
+        
+        .idea-item {
+            padding: 16px;
+            border-bottom: 1px solid rgba(106, 17, 203, 0.2);
+        }
+        
+        .idea-item:last-child {
+            border-bottom: none;
+        }
+        
+        .idea-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+        
+        .idea-desc {
+            color: #a0a0d0;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+        
+        .idea-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #8080b0;
+        }
+        
+        .web-market-header {
+            background: rgba(30, 30, 60, 0.7);
+            padding: 20px;
+            border-bottom: 1px solid rgba(106, 17, 203, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-box {
+            display: flex;
+            width: 60%;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid rgba(106, 17, 203, 0.4);
+            border-radius: 8px 0 0 8px;
+            font-size: 1rem;
+            background: rgba(20, 20, 40, 0.5);
+            color: #e0e0ff;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #6a11cb;
+        }
+        
+        .search-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(106, 17, 203, 0.4);
+        }
+        
+        .search-btn:hover {
+            box-shadow: 0 0 15px rgba(106, 17, 203, 0.6);
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #e0e0ff;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(106, 17, 203, 0.3);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 0 15px rgba(106, 17, 203, 0.5);
+        }
+        
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .market-item {
+            background: rgba(30, 30, 60, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2),
+                        0 0 15px rgba(106, 17, 203, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(106, 17, 203, 0.2);
+        }
+        
+        .market-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3),
+                        0 0 25px rgba(106, 17, 203, 0.3);
+        }
+        
+        .item-image {
+            height: 160px;
+            background: linear-gradient(45deg, rgba(40, 40, 80, 0.7), rgba(60, 60, 120, 0.7));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0a0d0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(106, 17, 203, 0.2);
+        }
+        
+        .item-content {
+            padding: 16px;
+        }
+        
+        .item-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+        
+        .item-desc {
+            color: #a0a0d0;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            height: 60px;
+            overflow: hidden;
+        }
+        
+        .item-price {
+            font-weight: 700;
+            color: #ff6b6b;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.4);
+        }
+        
+        .buy-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.4);
+        }
+        
+        .buy-btn:hover {
+            background: linear-gradient(135deg, #ff5252 0%, #ff7b33 100%);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .detail-section {
+            background: rgba(30, 30, 60, 0.6);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3),
+                        0 0 25px rgba(106, 17, 203, 0.2);
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(106, 17, 203, 0.3);
+        }
+        
+        .detail-header {
+            padding: 24px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            box-shadow: 0 0 25px rgba(106, 17, 203, 0.5);
+        }
+        
+        .detail-title {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        }
+        
+        .detail-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        .detail-body {
+            display: flex;
+            padding: 24px;
+            gap: 30px;
+        }
+        
+        .detail-image {
+            flex: 1;
+            background: linear-gradient(45deg, rgba(40, 40, 80, 0.7), rgba(60, 60, 120, 0.7));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0a0d0;
+            font-size: 1.2rem;
+            min-height: 300px;
+            border: 1px solid rgba(106, 17, 203, 0.2);
+        }
+        
+        .detail-info {
+            flex: 1;
+        }
+        
+        .detail-desc {
+            margin-bottom: 24px;
+            line-height: 1.8;
+            color: #e0e0ff;
+        }
+        
+        .feature-list {
+            margin-bottom: 24px;
+        }
+        
+        .feature-list h4 {
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+        
+        .features {
+            background: rgba(40, 40, 80, 0.5);
+            padding: 16px;
+            border-radius: 12px;
+            color: #a0a0d0;
+            border: 1px solid rgba(106, 17, 203, 0.2);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        
+        .copy-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%);
+            color: white;
+            box-shadow: 0 0 10px rgba(108, 117, 125, 0.4);
+        }
+        
+        .copy-btn:hover {
+            box-shadow: 0 0 15px rgba(108, 117, 125, 0.6);
+        }
+        
+        .xianyu-btn {
+            flex: 2;
+            background: linear-gradient(135deg, #ff6a00 0%, #ff9a00 100%);
+            color: white;
+            box-shadow: 0 0 10px rgba(255, 106, 0, 0.4);
+        }
+        
+        .xianyu-btn:hover {
+            box-shadow: 0 0 20px rgba(255, 106, 0, 0.6);
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #a0a0d0;
+            font-size: 0.9rem;
+            background: rgba(40, 40, 80, 0.5);
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(106, 17, 203, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .prototype-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .detail-body {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .web-market-header {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>灵感集市 - 产品原型 v2</h1>
+            <p>基于更新后PRD的双端架构设计：微信小程序端（创意者工作台） + Web端（实现者采购市场）</p>
+        </div>
+        
+        <div class="platform-tabs">
+            <button class="tab-btn active" data-tab="miniapp">微信小程序端</button>
+            <button class="tab-btn" data-tab="web">Web端</button>
+        </div>
+        
+        <!-- 微信小程序端 -->
+        <div class="platform-section active" id="miniapp-section">
+            <h2 class="section-title">创意者工作台（微信小程序）</h2>
+            <div class="prototype-container">
+                <!-- 极简录入模块 -->
+                <div class="prototype-card">
+                    <div class="miniapp-header">
+                        <span>灵感集市</span>
+                        <span>...</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 style="margin-bottom: 16px; text-align: center;">极简录入</h3>
+                        <div class="input-group">
+                            <label class="input-label">灵感标题</label>
+                            <input type="text" class="input-field" placeholder="一句话描述你的灵感">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">灵感详情</label>
+                            <textarea class="input-field" rows="3" placeholder="详细描述你的创意想法..."></textarea>
+                        </div>
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                            <button class="btn" style="flex: 1; background: rgba(255, 255, 255, 0.1); color: #e0e0ff; border: 1px solid rgba(255, 255, 255, 0.2);">
+                                📷 图片
+                            </button>
+                            <button class="btn" style="flex: 1; background: rgba(255, 255, 255, 0.1); color: #e0e0ff; border: 1px solid rgba(255, 255, 255, 0.2);">
+                                🎤 语音
+                            </button>
+                        </div>
+                        <button class="btn btn-success" style="width: 100%;">
+                            提交灵感 (3步完成)
+                        </button>
+                    </div>
+                    <div class="miniapp-nav">
+                        <div class="nav-item active">首页</div>
+                        <div class="nav-item">我的</div>
+                        <div class="nav-item">消息</div>
+                    </div>
+                </div>
+                
+                <!-- 异步状态管理中心 -->
+                <div class="prototype-card">
+                    <div class="miniapp-header">
+                        <span>灵感集市</span>
+                        <span>...</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 style="margin-bottom: 16px; text-align: center;">处理状态</h3>
+                        <div class="idea-item">
+                            <div class="idea-title">智能家居语音助手</div>
+                            <div class="idea-desc">通过语音控制家中所有智能设备...</div>
+                            <div class="idea-meta">
+                                <span class="status-badge status-processing">处理中</span>
+                                <span>2小时前</span>
+                            </div>
+                        </div>
+                        <div class="idea-item">
+                            <div class="idea-title">便携式咖啡机</div>
+                            <div class="idea-desc">小巧轻便，随时随地享受现磨咖啡...</div>
+                            <div class="idea-meta">
+                                <span class="status-badge status-completed">已完成</span>
+                                <span>1天前</span>
+                            </div>
+                        </div>
+                        <div class="idea-item">
+                            <div class="idea-title">AR健身镜</div>
+                            <div class="idea-desc">结合AR技术的互动健身设备...</div>
+                            <div class="idea-meta">
+                                <span class="status-badge status-error">处理异常</span>
+                                <span>3天前</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="miniapp-nav">
+                        <div class="nav-item">首页</div>
+                        <div class="nav-item active">我的</div>
+                        <div class="nav-item">消息</div>
+                    </div>
+                </div>
+                
+                <!-- 成果交付 -->
+                <div class="prototype-card">
+                    <div class="miniapp-header">
+                        <span>灵感集市</span>
+                        <span>...</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 style="margin-bottom: 16px; text-align: center;">成果交付</h3>
+                        <div class="idea-item">
+                            <div class="idea-title">便携式咖啡机</div>
+                            <div class="idea-desc">小巧轻便，随时随地享受现磨咖啡...</div>
+                            <div class="idea-meta">
+                                <span class="status-badge status-completed">AI生成完成</span>
+                                <span>已通知</span>
+                            </div>
+                        </div>
+                        
+                        <div style="margin: 20px 0; padding: 16px; background: rgba(40, 40, 80, 0.5); border-radius: 12px; border: 1px solid rgba(106, 17, 203, 0.2);">
+                            <div style="font-weight: 600; margin-bottom: 8px; color: #ffffff;">闲鱼标题:</div>
+                            <div style="margin-bottom: 16px; color: #a0a0d0;">【创新设计】便携式迷你咖啡机 - 随时随地享受现磨咖啡</div>
+                            
+                            <div style="font-weight: 600; margin-bottom: 8px; color: #ffffff;">闲鱼详情:</div>
+                            <div style="margin-bottom: 16px; color: #a0a0d0; font-size: 0.95rem;">这款便携式咖啡机采用创新设计，体积小巧仅手掌大小，内置可充电电池，支持USB-C快充。采用专业级研磨技术，保留咖啡原始风味...</div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                            <button class="btn btn-outline" style="flex: 1;">
+                                复制全部
+                            </button>
+                            <button class="btn" style="flex: 1; background: linear-gradient(135deg, #ff6a00 0%, #ff9a00 100%); color: white; box-shadow: 0 0 10px rgba(255, 106, 0, 0.4);">
+                                去闲鱼发布
+                            </button>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">回填闲鱼链接</label>
+                            <input type="text" class="input-field" placeholder="https://2.taobao.com/item.htm?id=...">
+                        </div>
+                        
+                        <button class="btn btn-success" style="width: 100%; margin-top: 12px;">
+                            提交链接
+                        </button>
+                    </div>
+                    <div class="miniapp-nav">
+                        <div class="nav-item">首页</div>
+                        <div class="nav-item active">我的</div>
+                        <div class="nav-item">消息</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Web端 -->
+        <div class="platform-section" id="web-section">
+            <h2 class="section-title">实现者采购市场（Web端）</h2>
+            <div class="prototype-container">
+                <!-- 市场浏览页面 -->
+                <div class="prototype-card" style="width: 100%; max-width: 800px;">
+                    <div class="web-market-header">
+                        <h3>灵感集市 - 采购市场</h3>
+                        <div class="search-box">
+                            <input type="text" class="search-input" placeholder="搜索创意产品...">
+                            <button class="search-btn">搜索</button>
+                        </div>
+                        <div class="filter-options">
+                            <button class="filter-btn active">全部</button>
+                            <button class="filter-btn">科技</button>
+                            <button class="filter-btn">家居</button>
+                            <button class="filter-btn">生活</button>
+                        </div>
+                    </div>
+                    <div class="market-grid">
+                        <div class="market-item">
+                            <div class="item-image">产品图片</div>
+                            <div class="item-content">
+                                <div class="item-title">便携式咖啡机</div>
+                                <div class="item-desc">小巧轻便，随时随地享受现磨咖啡，创新设计解决出行咖啡需求。</div>
+                                <div class="item-price">¥299</div>
+                                <button class="buy-btn">去闲鱼购买</button>
+                            </div>
+                        </div>
+                        <div class="market-item">
+                            <div class="item-image">产品图片</div>
+                            <div class="item-content">
+                                <div class="item-title">智能植物养护器</div>
+                                <div class="item-desc">自动监测土壤湿度、光照强度，智能提醒浇水施肥。</div>
+                                <div class="item-price">¥189</div>
+                                <button class="buy-btn">去闲鱼购买</button>
+                            </div>
+                        </div>
+                        <div class="market-item">
+                            <div class="item-image">产品图片</div>
+                            <div class="item-content">
+                                <div class="item-title">折叠办公桌</div>
+                                <div class="item-desc">节省空间的创新设计，一秒展开，承重50kg。</div>
+                                <div class="item-price">¥459</div>
+                                <button class="buy-btn">去闲鱼购买</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 项目详情页 -->
+                <div class="detail-section">
+                    <div class="detail-header">
+                        <h2 class="detail-title">便携式咖啡机</h2>
+                        <div class="detail-meta">
+                            <span>创意者: 匿名</span>
+                            <span>发布时间: 2026-03-20</span>
+                            <span>类别: 家居/厨房</span>
+                        </div>
+                    </div>
+                    <div class="detail-body">
+                        <div class="detail-image">
+                            产品展示图
+                        </div>
+                        <div class="detail-info">
+                            <div class="detail-desc">
+                                这款便携式咖啡机专为咖啡爱好者设计，解决了外出无法享受现磨咖啡的痛点。
+                                产品体积小巧，仅手掌大小，重量不到300g，可轻松放入背包或手提包中。
+                                内置2000mAh可充电电池，支持USB-C快充，满电可制作约15杯咖啡。
+                            </div>
+                            
+                            <div class="feature-list">
+                                <h4>核心功能亮点 (脱敏展示40%)</h4>
+                                <div class="features">
+                                    • 创新研磨技术，保留咖啡原始风味<br>
+                                    • 智能温控系统，精确控制水温<br>
+                                    • 一键操作，简单易用<br>
+                                    • 食品级材质，安全健康
+                                </div>
+                            </div>
+                            
+                            <div class="actions">
+                                <button class="btn copy-btn">
+                                    复制产品信息
+                                </button>
+                                <button class="btn xianyu-btn">
+                                    去闲鱼购买
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-note">
+            <p>注：Web端严格只读，无任何发布入口；所有商品必须先在小程序端完成并回填闲鱼链接后才会在Web端展示</p>
+        </div>
+    </div>
+    
+    <script>
+        // Tab切换功能
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // 移除所有active类
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelectorAll('.platform-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // 添加当前按钮的active类
+                button.classList.add('active');
+                const tab = button.getAttribute('data-tab');
+                document.getElementById(`${tab}-section`).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
