@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵感集市 - 极简录入</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 聊天区域 */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: #f5f5f5;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            border-radius: 18px;
+            line-height: 1.4;
+            font-size: 16px;
+            word-wrap: break-word;
+        }
+        
+        .message.received {
+            background-color: white;
+            border-bottom-left-radius: 5px;
+            align-self: flex-start;
+            margin-right: auto;
+        }
+        
+        .message.sent {
+            background-color: #dcf8c6;
+            border-bottom-right-radius: 5px;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        
+        /* 输入区域 */
+        .input-container {
+            background-color: white;
+            padding: 10px 15px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .action-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background-color: #07c160;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .action-button:hover {
+            background-color: #06ae56;
+        }
+        
+        .action-button i {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        /* 系统消息 */
+        .system-message {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin: 20px 0;
+            padding: 10px;
+        }
+        
+        /* 滚动到底部 */
+        .chat-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .chat-container {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 聊天显示区域 -->
+    <div class="chat-container" id="chatContainer">
+        <div class="system-message">
+            灵感集市 · 极简录入
+        </div>
+        <div class="message received">
+            欢迎使用灵感集市！点击下方按钮快速记录您的创意。
+        </div>
+        <div class="message received">
+            您可以：
+            <br>• 长按"语音"按钮录音
+            <br>• 点击"图片上传"选择图片
+        </div>
+        <div class="message received">
+            灵感已接收，AI正在后台为您整理，完成后将微信通知您。
+        </div>
+    </div>
+    
+    <!-- 输入区域 - 只有两个按钮 -->
+    <div class="input-container">
+        <button class="action-button" id="voiceBtn">
+            <i>🎤</i>
+            语音
+        </button>
+        <button class="action-button" id="imageBtn">
+            <i>📷</i>
+            图片上传
+        </button>
+    </div>
+
+    <script>
+        // 模拟语音按钮长按功能
+        let voicePressTimer = null;
+        const voiceBtn = document.getElementById('voiceBtn');
+        const chatContainer = document.getElementById('chatContainer');
+        
+        voiceBtn.addEventListener('touchstart', startVoiceRecording);
+        voiceBtn.addEventListener('mousedown', startVoiceRecording);
+        voiceBtn.addEventListener('touchend', stopVoiceRecording);
+        voiceBtn.addEventListener('mouseup', stopVoiceRecording);
+        voiceBtn.addEventListener('mouseleave', stopVoiceRecording);
+        
+        function startVoiceRecording() {
+            voicePressTimer = setTimeout(() => {
+                addMessage('🎤 正在录音...', 'sent');
+                voiceBtn.style.backgroundColor = '#ff4d4d';
+                voiceBtn.innerHTML = '<i>⏹️</i>松手结束';
+            }, 300);
+        }
+        
+        function stopVoiceRecording() {
+            if (voicePressTimer) {
+                clearTimeout(voicePressTimer);
+                voicePressTimer = null;
+            }
+            
+            if (voiceBtn.style.backgroundColor === 'rgb(255, 77, 77)') {
+                // 如果正在录音，结束录音
+                addMessage('✅ 语音已提交！AI正在处理...', 'received');
+                voiceBtn.style.backgroundColor = '#07c160';
+                voiceBtn.innerHTML = '<i>🎤</i>语音';
+            }
+        }
+        
+        // 图片上传功能
+        document.getElementById('imageBtn').addEventListener('click', function() {
+            addMessage('📷 图片已上传！AI正在处理...', 'sent');
+            setTimeout(() => {
+                addMessage('✅ 图片处理完成！AI正在生成需求文档...', 'received');
+            }, 1000);
+        });
+        
+        // 添加消息到聊天区域
+        function addMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            chatContainer.appendChild(messageDiv);
+            
+            // 滚动到底部
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // 初始化提示
+        setTimeout(() => {
+            addMessage('💡 小提示：长按语音按钮开始录音，松手即提交', 'received');
+        }, 2000);
+    </script>
+</body>
+</html>
