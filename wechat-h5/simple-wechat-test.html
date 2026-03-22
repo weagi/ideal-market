@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信公众号接口简易测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background: #07c160;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .result {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>微信公众号接口简易测试</h1>
+    
+    <div class="card">
+        <h2>1. OAuth2.0 授权测试</h2>
+        <button class="btn" onclick="testOAuth()">获取授权URL</button>
+        <div class="result" id="oauthResult">点击按钮生成授权URL</div>
+    </div>
+    
+    <div class="card">
+        <h2>2. JS-SDK 测试</h2>
+        <button class="btn" onclick="initJSConfig()">初始化JS-SDK</button>
+        <button class="btn" onclick="testChooseImage()">选择图片</button>
+        <button class="btn" onclick="testRecord()">录音测试</button>
+        <div class="result" id="jsResult">点击按钮进行测试</div>
+    </div>
+    
+    <div class="card">
+        <h2>3. 后端API测试</h2>
+        <button class="btn" onclick="testBackend()">测试后端连接</button>
+        <div class="result" id="backendResult">点击按钮测试后端</div>
+    </div>
+
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script>
+        // OAuth2.0 测试
+        function testOAuth() {
+            const appId = 'your-wechat-app-id';
+            const redirectUri = encodeURIComponent(window.location.href);
+            const scope = 'snsapi_userinfo';
+            const state = 'test_state_' + Date.now();
+            
+            const oauthUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
+            
+            document.getElementById('oauthResult').textContent = 
+                'OAuth2.0授权URL:\n' + oauthUrl + '\n\n注意: 需要替换 your-wechat-app-id 为真实的AppID';
+        }
+        
+        // JS-SDK 初始化
+        async function initJSConfig() {
+            try {
+                const response = await fetch(`/api/v1/wechat/js-config?url=${encodeURIComponent(window.location.href)}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    wx.config({
+                        debug: false,
+                        appId: data.config.appId,
+                        timestamp: data.config.timestamp,
+                        nonceStr: data.config.nonceStr,
+                        signature: data.config.signature,
+                        jsApiList: ['chooseImage', 'startRecord', 'stopRecord', 'onVoiceRecordEnd']
+                    });
+                    
+                    wx.ready(() => {
+                        document.getElementById('jsResult').textContent = '✅ JS-SDK初始化成功!';
+                    });
+                    
+                    wx.error((res) => {
+                        document.getElementById('jsResult').textContent = '❌ JS-SDK初始化失败: ' + JSON.stringify(res);
+                    });
+                } else {
+                    throw new Error(data.message || '获取配置失败');
+                }
+            } catch (error) {
+                document.getElementById('jsResult').textContent = '❌ 初始化失败: ' + error.message;
+            }
+        }
+        
+        // 选择图片测试
+        function testChooseImage() {
+            if (typeof wx === 'undefined') {
+                document.getElementById('jsResult').textContent = '❌ 请先初始化JS-SDK';
+                return;
+            }
+            
+            wx.chooseImage({
+                count: 1,
+                success: (res) => {
+                    document.getElementById('jsResult').textContent = '✅ 选择图片成功!\nlocalIds: ' + res.localIds[0];
+                },
+                fail: (error) => {
+                    document.getElementById('jsResult').textContent = '❌ 选择图片失败: ' + JSON.stringify(error);
+                }
+            });
+        }
+        
+        // 录音测试
+        function testRecord() {
+            if (typeof wx === 'undefined') {
+                document.getElementById('jsResult').textContent = '❌ 请先初始化JS-SDK';
+                return;
+            }
+            
+            wx.startRecord({
+                success: () => {
+                    document.getElementById('jsResult').textContent = '✅ 开始录音... (3秒后自动停止)';
+                    
+                    // 3秒后停止录音
+                    setTimeout(() => {
+                        wx.stopRecord({
+                            success: (res) => {
+                                document.getElementById('jsResult').textContent += '\n✅ 停止录音成功! localId: ' + res.localId;
+                            }
+                        });
+                    }, 3000);
+                },
+                cancel: () => {
+                    document.getElementById('jsResult').textContent = '用户取消录音';
+                }
+            });
+        }
+        
+        // 后端API测试
+        async function testBackend() {
+            try {
+                const response = await fetch('/api/v1/');
+                const data = await response.json();
+                document.getElementById('backendResult').textContent = '✅ 后端连接正常!\n' + JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('backendResult').textContent = '❌ 后端连接失败: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

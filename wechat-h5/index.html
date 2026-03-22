@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>灵感集市 - 公众号版</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>灵感集市</h1>
+            <p>记录创意，变现想法</p>
+        </div>
+
+        <!-- 录音区域 -->
+        <div class="recording-section" id="recordingSection">
+            <div class="recording-controls">
+                <button class="record-btn" id="recordBtn">
+                    <span class="btn-icon">🎤</span>
+                    <span class="btn-text">按住说话</span>
+                </button>
+            </div>
+            <div class="recording-tips">
+                <p>长按按钮开始录音，松手即提交</p>
+            </div>
+        </div>
+
+        <!-- 图片上传区域 -->
+        <div class="upload-section">
+            <button class="upload-btn" id="uploadBtn">
+                <span class="btn-icon">📷</span>
+                <span class="btn-text">上传图片</span>
+            </button>
+            <input type="file" id="fileInput" accept="image/*" capture="camera" style="display: none;">
+        </div>
+
+        <!-- 状态显示 -->
+        <div class="status-section" id="statusSection" style="display: none;">
+            <div class="status-indicator">
+                <div class="pulse"></div>
+                <p class="status-text">AI正在后台为您整理...</p>
+            </div>
+        </div>
+
+        <!-- 我的灵感入口 -->
+        <div class="my-ideas-link">
+            <a href="my-ideas.html" class="link-btn">查看我的灵感</a>
+        </div>
+    </div>
+
+    <script src="js/wechat-config.js"></script>
+    <script src="js/recording.js"></script>
+    <script src="js/upload.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

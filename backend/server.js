@@ -1,27 +1,18 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 // 初始化Express应用
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // 安全中间件
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:8080', 'https://your-web-domain.com'],
+  origin: ['http://localhost:8082', 'http://localhost:8083'],
   credentials: true
 }));
-
-// 速率限制
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15分钟
-  max: 100 // 限制每个IP 15分钟内最多100个请求
-});
-app.use(limiter);
 
 // 解析JSON和表单数据
 app.use(express.json({ limit: '10mb' }));
@@ -37,6 +28,7 @@ const upload = multer({
 // 路由导入
 const ideaRoutes = require('./routes/ideas');
 const userRoutes = require('./routes/users');
+const wechatRoutes = require('./routes/wechat');
 
 // 基础路由
 app.get('/', (req, res) => {
@@ -50,6 +42,7 @@ app.get('/', (req, res) => {
 // API路由
 app.use('/api/v1/ideas', ideaRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/wechat', wechatRoutes);
 
 // 错误处理中间件
 app.use((err, req, res, next) => {
@@ -65,25 +58,19 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: '接口未找到' });
 });
 
-// 数据库连接
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ideal_market');
-    console.log('✅ MongoDB连接成功');
-  } catch (error) {
-    console.error('❌ MongoDB连接失败:', error);
-    process.exit(1);
-  }
-};
-
 // 启动服务器
 const startServer = async () => {
-  await connectDB();
+  // 连接数据库（如果配置了的话）
+  if (process.env.MONGODB_URI) {
+    const connectDB = require('./config/db');
+    await connectDB();
+  }
   
   app.listen(PORT, () => {
     console.log(`🚀 灵感集市后端服务启动成功`);
     console.log(`📡 服务地址: http://localhost:${PORT}`);
-    console.log(`📚 API文档: http://localhost:${PORT}/api-docs`);
+    console.log(`📱 微信公众号OAuth回调: http://localhost:${PORT}/api/v1/wechat/oauth/callback`);
+    console.log(`📱 微信JS-SDK配置: http://localhost:${PORT}/api/v1/wechat/js-config`);
   });
 };
 

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>微信公众号接口测试 - 灵感集市</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-section {
+            background: white;
+            color: #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        
+        .test-result {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .test-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        
+        .test-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .test-btn.success {
+            background: #52c41a;
+        }
+        
+        .test-btn.error {
+            background: #ff4d4f;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>微信公众号接口测试</h1>
+            <p>测试灵感集市的微信集成功能</p>
+        </div>
+        
+        <div class="test-container">
+            <!-- OAuth2.0 授权测试 -->
+            <div class="test-section">
+                <div class="test-header">🔐 OAuth2.0 授权测试</div>
+                <div class="btn-group">
+                    <button class="test-btn" id="oauthBtn">获取用户授权</button>
+                    <button class="test-btn" id="userInfoBtn">获取用户信息</button>
+                </div>
+                <div class="test-result" id="oauthResult">等待测试...</div>
+            </div>
+            
+            <!-- JS-SDK 配置测试 -->
+            <div class="test-section">
+                <div class="test-header">📱 JS-SDK 配置测试</div>
+                <div class="btn-group">
+                    <button class="test-btn" id="jsConfigBtn">初始化JS-SDK</button>
+                    <button class="test-btn" id="checkJsApiBtn">检查JS接口</button>
+                </div>
+                <div class="test-result" id="jsConfigResult">等待测试...</div>
+            </div>
+            
+            <!-- 微信API功能测试 -->
+            <div class="test-section">
+                <div class="test-header">🎤 微信API功能测试</div>
+                <div class="btn-group">
+                    <button class="test-btn" id="chooseImageBtn">选择图片</button>
+                    <button class="test-btn" id="startRecordBtn">开始录音</button>
+                    <button class="test-btn" id="stopRecordBtn">停止录音</button>
+                </div>
+                <div class="test-result" id="apiResult">等待测试...</div>
+            </div>
+            
+            <!-- 后端API测试 -->
+            <div class="test-section">
+                <div class="test-header">🔧 后端API测试</div>
+                <div class="btn-group">
+                    <button class="test-btn" id="backendHealthBtn">后端健康检查</button>
+                    <button class="test-btn" id="submitTestBtn">提交测试灵感</button>
+                </div>
+                <div class="test-result" id="backendResult">等待测试...</div>
+            </div>
+            
+            <!-- 当前状态显示 -->
+            <div class="test-section">
+                <div class="test-header">📊 当前状态</div>
+                <div class="status-indicator">
+                    <span>OAuth状态:</span>
+                    <span id="oauthStatus">未授权</span>
+                </div>
+                <div class="status-indicator">
+                    <span>JS-SDK状态:</span>
+                    <span id="jsSdkStatus">未初始化</span>
+                </div>
+                <div class="status-indicator">
+                    <span>录音状态:</span>
+                    <span id="recordStatus">未录音</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script src="js/wechat-config.js"></script>
+    <script src="js/wechat-test.js"></script>
+</body>
+</html>

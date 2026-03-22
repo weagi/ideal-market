@@ -1,0 +1,33 @@
+<!-- pages/index/index.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">灵感集市</text>
+    <text class="subtitle">记录创意，变现想法</text>
+  </view>
+  
+  <view class="recording-section" wx:if="{{isRecording}}">
+    <view class="recording-indicator">
+      <view class="pulse"></view>
+      <text class="recording-text">录音中... {{recordingTime}}s</text>
+    </view>
+    <button class="stop-btn" bindtap="stopRecording">结束录音</button>
+  </view>
+  
+  <view class "action-buttons" wx:else>
+    <view class="button-group">
+      <button class="voice-btn" bindtouchstart="startRecording" bindtouchend="stopRecording">
+        <view class="btn-icon">🎤</view>
+        <text class="btn-text">语音</text>
+      </button>
+      
+      <button class="image-btn" bindtap="uploadImage">
+        <view class="btn-icon">📷</view>
+        <text class="btn-text">图片上传</text>
+      </button>
+    </view>
+    
+    <view class="tip">
+      <text>长按语音按钮开始录音，松手即提交</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,43 @@
+<!-- pages/my-ideas/my-ideas.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">我的灵感</text>
+  </view>
+  
+  <view class="ideas-list" wx:if="{{ideas.length > 0}}">
+    <view 
+      class="idea-item {{idea.status === 'completed' ? 'completed' : ''}}" 
+      wx:for="{{ideas}}" 
+      wx:key="_id"
+      data-id="{{idea._id}}"
+      bindtap="viewIdeaDetail"
+    >
+      <view class="idea-header">
+        <text class="idea-title">{{idea.aiGenerated.xianyuTitle || idea.title || '未命名灵感'}}</text>
+        <view class="status-tag {{idea.status}}">
+          <text wx:if="{{idea.status === 'processing'}}">🟡 处理中</text>
+          <text wx:if="{{idea.status === 'completed'}}">🟢 已完成</text>
+          <text wx:if="{{idea.status === 'failed'}}">🔴 异常</text>
+        </view>
+      </view>
+      
+      <view class="idea-content" wx:if="{{idea.status === 'completed'}}">
+        <text class="ai-score">AI评分: {{idea.aiGenerated.aiScore || 0}}</text>
+        <text class="price">价格: ¥{{idea.marketPrice || 0}}</text>
+      </view>
+      
+      <view class="idea-content" wx:else>
+        <text class="processing-text">AI正在后台为您整理...</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="empty-state" wx:elif="{{!loading && ideas.length === 0}}">
+    <text class="empty-text">暂无灵感记录</text>
+    <button class="add-btn" bindtap="goToIndex">去记录灵感</button>
+  </view>
+  
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

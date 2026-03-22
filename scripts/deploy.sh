@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# 灵感集市部署脚本
+# 灵感集市完整部署脚本
 
 set -e
 
-echo "🚀 开始部署灵感集市项目..."
+echo "🚀 开始部署灵感集市完整项目..."
 
 # 检查Docker和Docker Compose是否安装
 if ! command -v docker &> /dev/null; then
@@ -29,7 +29,7 @@ else
     docker-compose build
 fi
 
-echo "🚀 启动服务..."
+echo "🚀 启动完整服务..."
 if docker compose version &> /dev/null; then
     docker compose up -d
 else
@@ -48,15 +48,14 @@ else
 fi
 
 echo ""
-echo "✅ 部署完成！"
+echo "✅ 完整部署完成！"
 echo ""
 echo "服务地址："
 echo "🌐 Web前端: http://localhost"
-echo "🔧 API文档: http://localhost/api/v1"
-echo "📊 RabbitMQ管理: http://localhost:15672 (用户名: admin, 密码: password123)"
+echo "🔧 API文档: http://localhost:3001/api/v1"
 echo ""
 echo "💡 注意事项："
 echo "1. 首次启动可能需要几分钟时间"
 echo "2. 请修改 backend/.env 中的敏感配置"
-echo "3. 生产环境请配置SSL证书"
-echo "4. 微信小程序需要配置真实的AppID和Secret"
+echo "3. 微信小程序需要配置真实的AppID和Secret"
+echo "4. AI服务需要配置真实的API密钥"

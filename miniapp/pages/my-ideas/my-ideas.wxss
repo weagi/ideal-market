@@ -1,0 +1,117 @@
+/* pages/my-ideas/my-ideas.wxss */
+.container {
+  padding: 20rpx;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.header {
+  padding: 40rpx 20rpx;
+  text-align: center;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.ideas-list {
+  padding: 0 20rpx;
+}
+
+.idea-item {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.idea-item:active {
+  transform: translateY(-2rpx);
+}
+
+.idea-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.idea-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.status-tag.processing {
+  background: #fffbe6;
+  border: 2rpx solid #ffe58f;
+  color: #faad14;
+}
+
+.status-tag.completed {
+  background: #f6ffed;
+  border: 2rpx solid #b7eb8f;
+  color: #52c41a;
+}
+
+.status-tag.failed {
+  background: #fff2f0;
+  border: 2rpx solid #ffccc7;
+  color: #ff4d4f;
+}
+
+.status-tag {
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.idea-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ai-score, .price {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.processing-text {
+  font-size: 28rpx;
+  color: #999;
+  font-style: italic;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 100rpx 40rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #999;
+  margin-bottom: 40rpx;
+  display: block;
+}
+
+.add-btn {
+  background: #07c160;
+  color: white;
+  border-radius: 50rpx;
+  padding: 20rpx 60rpx;
+  font-size: 28rpx;
+}
+
+.loading {
+  text-align: center;
+  padding: 40rpx;
+  color: #666;
+}
